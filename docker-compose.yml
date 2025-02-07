@@ -1,0 +1,40 @@
+services:
+  db:
+    container_name: db
+    build:
+      context: .
+      dockerfile: containers/postgres/Dockerfile
+    platform: linux/x86_64
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    # ヘルスチェック
+    healthcheck:
+      test: pg_isready -U "${POSTGRES_USER:-postgres}" || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    environment:
+      - POSTGRES_NAME
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+  app:
+    container_name: app
+    build:
+      context: .
+      dockerfile: containers/flask/Dockerfile
+    volumes:
+      - ./application:/code
+    ports:
+      - "8000:8000"
+      - "8080:8080"
+    command: sh -c "/usr/local/bin/entrypoint.sh"
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+volumes:
+  db_data:
