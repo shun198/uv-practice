@@ -12,3 +12,6 @@ dependencies = [
 dev = [
     "ruff>=0.9.5",
 ]
+
+[tool.poetry]
+package-mode = false
