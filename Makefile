@@ -10,3 +10,5 @@ up:
 down:
 	docker compose down
 
+format:
+	docker compose exec app uv run ruff format
