@@ -1,6 +1,5 @@
 services:
   db:
-    container_name: db
     build:
       context: .
       dockerfile: containers/postgres/Dockerfile
@@ -21,7 +20,6 @@ services:
       - POSTGRES_USER
       - POSTGRES_PASSWORD
   app:
-    container_name: app
     build:
       context: .
       dockerfile: containers/flask/Dockerfile
